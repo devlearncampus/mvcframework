@@ -1,0 +1,29 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+		out.print(application.getAttribute("born"));
+		out.print(session.getAttribute("id"));
+		out.print(request.getAttribute("hobby"));
+		
+		/*
+		request 의 자료형? HttpServletRequest
+		session 의 자료형은? HttpSession
+		application의 자료형은? ServletContext 				
+		*/
+		//현재 웹애플리케이션내의 자원의 실제 os상의 경로를 반환(현재 os가 리눅스이면 리눅스경로, 맥이면 맥의 경로, 윈도우이면 윈도우 경로)
+		String path = application.getRealPath("WEB-INF/servlet-mapping.txt"); 
+		out.print(path);		
+	%>
+</body>
+</html>
+
+
+
+
+

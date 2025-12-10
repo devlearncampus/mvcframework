@@ -26,7 +26,8 @@ import com.ch.mvcframework.movie.model.MovieManager;
  * 						주의) jsp로 사실 서블릿이므로 Controller역할을 수행할 수는 잇지만, jsp가 주로 디자인에 사용되므로, 
  * 							컨트롤러로서의 역할은 주로 서블릿으로 구현함 
  * */
-public class MovieController{
+public class MovieController implements Controller{
+											/*is a 의 의미 */
 	MovieManager manager=new MovieManager();
 	
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -59,6 +60,12 @@ public class MovieController{
 		
 		//아래의 코드는 응답을 하면서 브라우저로 하여금 재접속하라는 명령이다..따라서 응답하게 됨..사용금지
 		//response.sendRedirect("/movie/model2/result.jsp"); //<script>location.href=url</script>
+	}
+
+	@Override
+	public String getViewName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

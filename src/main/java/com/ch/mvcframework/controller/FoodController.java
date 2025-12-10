@@ -20,10 +20,10 @@ import com.ch.mvcframework.food.model.FoodManager;
  * 						결론 - 서블릿 밖에 없음 
  * 모델2의 컨트롤러의 요건 위 1, 2번 
  * */
-public class FoodController{
+public class FoodController implements Controller{
 	FoodManager manager = new FoodManager();
 	
-	public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//클라이언트의 요청 파라미터 받기 
 		request.setCharacterEncoding("utf-8");
 		
@@ -34,6 +34,12 @@ public class FoodController{
 		
 		RequestDispatcher dis=request.getRequestDispatcher("/food/result.jsp");//포워딩 하고싶은 URL
 		dis.forward(request, response);//포워딩 발생!!
+	}
+
+	@Override
+	public String getViewName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
