@@ -39,6 +39,28 @@ public class BoardDAO {
 		mybatisConfig.release(sqlSession);
 		return board;
 	}
+	
+	//1건 삭제 
+	public int delete(int board_id) {
+		int result=0;
+		//SqlSession = Connection + PreparedStatement 두개를 합친객체
+		SqlSession sqlSession=mybatisConfig.getSqlSession();
+		sqlSession.delete("Board.delete", board_id);
+		sqlSession.commit();//트랜잭션 확정 
+		mybatisConfig.release(sqlSession);
+		return result;
+	}
+	
+	//1건 수정 
+	public int update(Board board) {
+		int result=0;
+		SqlSession sqlSession=mybatisConfig.getSqlSession();
+		sqlSession.update("Board.update", board);
+		//DML은 commit 대상임
+		sqlSession.commit();
+		mybatisConfig.release(sqlSession);
+		return result;
+	}
 }
 
 

@@ -41,6 +41,12 @@ public class FoodController implements Controller{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean isForward() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
 
