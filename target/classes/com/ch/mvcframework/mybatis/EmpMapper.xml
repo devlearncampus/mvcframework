@@ -3,8 +3,7 @@
 <mapper namespace="Emp">
 
 	<insert id="insert" parameterType="Emp">
-		insert into emp2(empno, ename, sal) 
-		values(#{empno},#{ename},#{sal})
+		insert into emp2(empno, ename, sal) values(#{empno},#{ename},#{sal})
 	</insert>
 	
 </mapper>

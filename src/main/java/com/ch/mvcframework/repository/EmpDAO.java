@@ -3,18 +3,24 @@ package com.ch.mvcframework.repository;
 import org.apache.ibatis.session.SqlSession;
 
 import com.ch.mvcframework.dto.Emp;
+import com.ch.mvcframework.exception.EmpException;
 import com.ch.mvcframework.mybatis.MybatisConfig;
 
 public class EmpDAO {
 	MybatisConfig mybatisConfig=MybatisConfig.getInstance();
 	
 	//1명 등록 
-	public void insert(Emp emp) {
-		SqlSession sqlSession=mybatisConfig.getSqlSession();
-		int result=sqlSession.insert("Emp.insert", emp);
-		System.out.println(result);
-		sqlSession.commit();//트랜잭션 확정 
-		mybatisConfig.release(sqlSession);
+	//throws가 명시된 메서드를 호출한 사람은 throws에 명시된 예외를 처리할 책임을 떠안게 됨 
+	public void insert(SqlSession sqlSession , Emp emp) throws EmpException{
+		try {
+			sqlSession.insert("Emp.insert", emp);
+		}catch(Exception e) {
+			e.printStackTrace();//에러의 정보를 개발자나, 시스템관리자가 알수있도록 로그..
+			//throw 는 예외를 일으키는 코드!!  이기 때문에 개발자 다음의 2가지 중 하나를 선택해야 한다
+			//1) try~catch로 잡기
+			//2) 여기서 발생한 예외를 이 메서드 호출자에게 책임 전가
+			throw new EmpException("사원등록실패", e);
+		}
 	}
 }
 
