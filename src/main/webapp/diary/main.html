@@ -8,28 +8,104 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/Box.js"></script>
     <script>
+        /*
+        자바스크립트의 내장객체의 종류 
+        1) String 
+        2) Math
+        3) Array 
+        4) Date
+        5) JSON
+        */
+
+        let matrix=[];//7칸짜리 일차원배열을 모아놓을 바깥 배열
         let dayArray=["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+
+        /*-----------------------------------------------------
+        [2] 해당 월의 시작 요일구하기
+            1) 해당 월로 가자 
+            2) 해당 월의 날짜를 1일로 조작하자 
+        -----------------------------------------------------*/
+        function getStartDay(yy, mm){
+            let d = new Date(yy, mm, 1); //년,월,일을 생성자의 매개변수로 대입하면 더 편하다
+            /*  생성자가 아닌 아래의 메서드로도 동일한 효과 남
+                d.setFullYear(yy);
+                d.setMonth(mm);
+                d.setDate(1);
+            */
+            return d.getDay(); //조작한 객체로부터 요일을 구한다..    
+        }
+
+        /*-----------------------------------------------------
+        [3] 해당 월의 총 일수 (예-12월은 31일까지임..)
+            1) 해당 월보다 1 큰(다음달) 달로 이동(조작)
+            2) 조작된 월을 대상으로 0일로 또 조작 ( 결국 0일은 이전달의 마지막날을 의미하게되므로, 원하는 결과 구할 수 있음)
+        -----------------------------------------------------*/
+        function getTotalDate(yy, mm){
+            let d = new Date(yy, mm+1, 0);
+            return d.getDate();//조작된 날짜 객체에게 몇일인지 물어본다
+        }
+
+        /*-----------------------------------------------------
+        [4-1]  기존 텍스트 지우기 
+        -----------------------------------------------------*/
+        function clearNum(){
+            for(let a=0; a<matrix.length;a++){
+                for(let i=0;i<matrix[a].length;i++){
+                    matrix[a][i].setMsg("");//텍스트 초기화!!
+                }
+            }
+        }
+
+        /*-----------------------------------------------------
+        [4]  달력 셀에 실제 날짜 뿌리기
+        -----------------------------------------------------*/
+        function printNum(yy, mm){
+            let n=0;  //현재 박스의 순번을 알기위한 변수 
+            let num=1; //실제 날짜에 사용할 변수 
+
+            for(let a=0;a<6;a++){
+                for(let i=0;i<7;i++){
+                    //이미 존재하는 박스의 셀에 출력 
+                    if(n>=getStartDay(yy,mm) && num<=getTotalDate(yy,mm)){//순번용 변수인 n이  각월의 시작 요일에 도달할때부터~~
+                          //예- 12월 경우엔 0번째는 참아야 하고, 1번에 도달했을때 부터 찍어야 함.. (12월은 월요일부터 시작하므로)
+                        matrix[a][i].setMsg(num);//Box 객체 안에 들어있는 div 사이에 글쓰 넣기!!
+                        num++;
+                    }
+                    n++;
+                }
+            }            
+        }
+
 
         /*-----------------------------------------------------
         [1] content div에 박스 출력 
         -----------------------------------------------------*/
         function createBox(){
             //요일 박스
-            for(let i=0;i<7;i++){
+            for(let i=0;i<dayArray.length;i++){
                 let box=new Box(document.querySelector(".days"), i*100, 0,100,50,"pink", dayArray[i]); 
             }
             
             //날짜 박스 생성 
             for(let a=0;a<6;a++){ // 층 수 만큼
-                for(let i=0;i<7;i++){ //호 수 만큼 
+                let boxList=[]; //층 수 만큼 7칸짜리 일차원 배열이 필요함 
+                for(let i=0;i<dayArray.length;i++){ //호 수 만큼 
                     //constructor(container, x, y, width, height, bg)
                     let box = new Box(document.querySelector(".content"), i*100, a*100,100,100,"yellow", "");
+                    boxList.push(box);
                 }
+                matrix.push(boxList);
             }
         }
 
         $(()=>{
             createBox();
+
+            clearNum();
+
+            let currentDate = new Date();
+            //최초 문서 로드시엔 현재 날짜를 넘겨야 함
+            printNum(currentDate.getFullYear(),  currentDate.getMonth() );
         });        
     </script>
 </head>

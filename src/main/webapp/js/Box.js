@@ -30,4 +30,10 @@ class Box{
         //화면에 부착 
         this.container.appendChild(this.div);
     }
+
+    //텍스트 넣기 
+    setMsg(msg){
+        this.div.innerText=msg;
+    }
+
 }
