@@ -1,0 +1,25 @@
+.container{
+    width: 700px;
+    height: 700px;
+    background-color: antiquewhite;
+    margin: auto;
+}
+.header{
+    width: 100%;
+    height: 50px;
+    background-color: aqua;
+    text-align: center;
+    line-height: 50px;
+}
+.days{
+    width: 100%;
+    height: 50px;
+    background-color: blueviolet;
+    position: relative;/*자식에 포지션이 명시되었으므로, 부모도 포지션이 명시되어야 함*/
+}
+.content{
+    width: 100%;
+    height: 600px;
+    background-color: aquamarine;
+    position: relative; /*자식에 포지션이 명시되었으므로, 부모도 포지션이 명시되어야 함*/
+}

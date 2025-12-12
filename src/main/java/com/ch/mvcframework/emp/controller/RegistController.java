@@ -6,15 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.session.SqlSession;
-
 import com.ch.mvcframework.controller.Controller;
 import com.ch.mvcframework.dto.Dept;
 import com.ch.mvcframework.dto.Emp;
-import com.ch.mvcframework.exception.EmpException;
-import com.ch.mvcframework.mybatis.MybatisConfig;
-import com.ch.mvcframework.repository.DeptDAO;
-import com.ch.mvcframework.repository.EmpDAO;
+import com.ch.mvcframework.emp.model.EmpService;
 
 /*
  사원 등록 요청을 처리하는 하위 컨트롤러
@@ -22,14 +17,8 @@ import com.ch.mvcframework.repository.EmpDAO;
  4단계: DML 이므로 4단계는 생략    
  */
 public class RegistController implements Controller{
-	/*
-	DeptDAO와 EmpDAO가 같은 트랜잭션으로 묶이려면, 각각의 DAO는 공통의 SqlSession을 사용해야 한다.
-	따라서 이 컨트롤러에서 MybatisConfig 으로 부터 SqlSession을 하나 취득한 후 insert문 호출시 
-	같은 주소값을 갖는 공유된 SqlSession을 나눠주자
-	*/
-	MybatisConfig mybatisConfig=MybatisConfig.getInstance();
-	DeptDAO deptDAO=new DeptDAO();
-	EmpDAO empDAO = new EmpDAO();
+	private EmpService empService=new EmpService();
+	private String viewName;
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,31 +42,30 @@ public class RegistController implements Controller{
 		emp.setEname(ename);//사원명 
 		emp.setSal(Integer.parseInt(sal));//급여  
 		
-		SqlSession sqlSession = mybatisConfig.getSqlSession();
-		//mybatis는 디폴트가  autocommit=false 로 되어있으므로, 개발자가 별도로 
-		//트랜잭션 시작을 알릴필요 없음 
-		try {
-			deptDAO.insert( sqlSession , dept);
-			empDAO.insert( sqlSession , emp);
-			sqlSession.commit();//트랜잭션 확정
-		} catch (Exception e) {
-			e.printStackTrace();
-			sqlSession.rollback();//둘중에 누가 잘못되었던 간에, 단 하나라도 문제가 발생하면 전체가 무효가 됨
-		}finally {
-			mybatisConfig.release(sqlSession);
-		}
+		//Emp가  Dept 를 has a 관계로 보유하고 있으므로
+		//낱개로 전달하지 말고, 모아서 전달하자 
+		emp.setDept(dept);
 		
+		//모델 영역에 일 시키기!!(주의 구체적으로 직접 일하지 말자=일직접 하는 순간 모델이 됨...)
+		//코드가 혼재되므로, 모델 영역을 분리시킬 수 없으므로 재사용성이 떨어짐
+		//아래의 regist() 메서드에는 호출자에게 예외를 전가시키는(=떠넘기는) throws 가 처리되어 잇음에도 불구하고
+		//컴파일 에러가 나지 않는 이유는? 여기서의 예외가 개발자에게 처리를 강요하지 않는 RuntimeException 이기 때문이다..
+		//하지만 개발자는 강요하지 않는 다고 하여 예외 처리를 하지 않으면, 프로그램을 올바르게 실행될 수 없을 것이다..
+		try {
+			empService.regist(emp);
+			viewName="/emp/regist/result";
+		}catch(Exception e) {
+			viewName="/emp/error";
+		}
 	}
 
 	@Override
 	public String getViewName() {
-		// TODO Auto-generated method stub
-		return null;
+		return viewName;  //  
 	}
 
 	@Override
 	public boolean isForward() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
