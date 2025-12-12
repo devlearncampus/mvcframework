@@ -10,6 +10,7 @@ class Box{
         this.height=height;
         this.bg=bg;
         this.msg=msg;
+        this.dd; //박스가 보유할 날짜 (printNum함수로 이중 반복문돌때 날짜를 주입받아야 함)
 
         //스타일 적용 
         this.div.style.position="absolute";
@@ -29,6 +30,23 @@ class Box{
 
         //화면에 부착 
         this.container.appendChild(this.div);
+
+        //마우스 오버 이벤트 연결 
+        this.div.addEventListener("mouseover", ()=>{
+            //화살표 함수에서의 this는 상위 스코프를 가리키므로, 현재 메서드에서의 상위 스코프는 Box라는 객체를 말한다.
+            this.div.style.background="";
+        });
+
+        this.div.addEventListener("mouseout", ()=>{
+            this.div.style.background="yellow";
+        });
+
+        //클릭 이벤트 연결 
+        this.div.addEventListener("click", ()=>{
+            alert(currentDate.getFullYear()+"년 "+(currentDate.getMonth()+1)+"월 "+this.dd+"일입니다 ");
+        });
+        
+
     }
 
     //텍스트 넣기 
@@ -36,4 +54,8 @@ class Box{
         this.div.innerText=msg;
     }
 
+    //날짜 대입받기
+    setDate(dd){
+        this.dd=dd;
+    }
 }

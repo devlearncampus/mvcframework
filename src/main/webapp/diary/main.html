@@ -16,7 +16,7 @@
         4) Date
         5) JSON
         */
-
+        let currentDate;//모든 함수에서 현재 유저가 머물러있는 날짜를 알게 하기 위해..전역변수로 빼놓음
         let matrix=[];//7칸짜리 일차원배열을 모아놓을 바깥 배열
         let dayArray=["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
 
@@ -69,6 +69,7 @@
                     if(n>=getStartDay(yy,mm) && num<=getTotalDate(yy,mm)){//순번용 변수인 n이  각월의 시작 요일에 도달할때부터~~
                           //예- 12월 경우엔 0번째는 참아야 하고, 1번에 도달했을때 부터 찍어야 함.. (12월은 월요일부터 시작하므로)
                         matrix[a][i].setMsg(num);//Box 객체 안에 들어있는 div 사이에 글쓰 넣기!!
+                        matrix[a][i].setDate(num);
                         num++;
                     }
                     n++;
@@ -98,14 +99,54 @@
             }
         }
 
+        /*-----------------------------------------------------
+        [5]  달력의 날짜 제목  2025-12
+        -----------------------------------------------------*/
+        function setTitle(){
+            //일반 사용자들을 배려하여, 월을 출력할때만은 +1 해서 출력한다..
+            $(".header span").html(currentDate.getFullYear()+"년 "+(currentDate.getMonth()+1)+"월 ");
+        }
+
+        function prev(){
+            //현재 월에서 -1 한 결과를 이용하여 clearNum() , printNum()       
+            
+            //공유된 날짜 객체의 월을 -1 처리한다..
+            currentDate.setMonth( currentDate.getMonth()-1);
+
+            //화면에 출력 
+            setTitle();
+            clearNum();
+            printNum(currentDate.getFullYear() , currentDate.getMonth());
+        }
+        
+        function next(){
+            currentDate.setMonth( currentDate.getMonth()+1);
+            setTitle();
+            clearNum();
+            printNum(currentDate.getFullYear() , currentDate.getMonth());
+        }
+
+
         $(()=>{
+            currentDate = new Date();
+
             createBox();
 
-            clearNum();
-
-            let currentDate = new Date();
+            setTitle();
+            clearNum();            
             //최초 문서 로드시엔 현재 날짜를 넘겨야 함
             printNum(currentDate.getFullYear(),  currentDate.getMonth() );
+
+            //이전달 보기 버튼
+            $($(".header button")[0]).click(()=>{
+                prev();
+            });    
+
+            //다음달 보기 버튼 
+            $($(".header button")[1]).click(()=>{
+                next();
+            });    
+
         });        
     </script>
 </head>
