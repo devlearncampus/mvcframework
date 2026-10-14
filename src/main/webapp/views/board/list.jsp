@@ -1,13 +1,4 @@
-<%@page import="java.time.format.DateTimeFormatter"%>
-<%@page import="com.hexagon.mvc.dto.Board"%>
-<%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%
-//ListController 에서  request 객체에 저장해놓은 boardList 를 꺼내먹자!!!
-	//DispatcherServlet 이 list.jsp를 포워딩 했기 때문에, 즉 응답을 끊지 않고 list.jsp로 요청을 전달해놓았기 때문에 
-	//이 jsp에서 사용될  request, reponse 는 새롭게 생성된 객체들이 아니라, 과거 /board/list 요청 때 생성된 request, response가 그대로 전달되는 것임..
-	List<BoardDTO> boardList = (List)request.getAttribute("boardList");
-%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,17 +28,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<%
-				for(BoardDTO board : boardList){
-				%>
 				<tr>
 					<td>1</td>
-					<td><a href="/board/content?board_id=<%=board.getBoardId()%>"><%=board.getTitle() %></a></td>
-					<td><%=board.getWriter() %></td>
-					<td><%=board.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) %></td>  
-					<td><%=board.getHit()%></td>
+					<td><a href="$">/td>
+					<td></td>
+					<td></td>  
+					<td></td>
 				</tr>
-				<%} %>
 				<tr>
 					<td colspan="5">
 						<button onClick="location.href='/board/write.jsp';">글쓰기</button>
